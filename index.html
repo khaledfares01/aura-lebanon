@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aura Store</title>
+
+<style>
+:root {
+  --gold: #D4A017;
+  --fuchsia: #E91E63;
+  --dark: #0f0f0f;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--dark);
+  color: white;
+}
+
+header {
+  text-align: center;
+  padding: 20px;
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--gold);
+  animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+  from { text-shadow: 0 0 5px var(--gold); }
+  to { text-shadow: 0 0 20px var(--gold); }
+}
+
+.product {
+  background: #1a1a1a;
+  margin: 20px;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.product h2 {
+  color: var(--fuchsia);
+}
+
+.stock {
+  margin: 10px 0;
+  font-weight: bold;
+}
+
+.out {
+  color: red;
+}
+
+input, textarea, select {
+  width: 100%;
+  margin: 8px 0;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+}
+
+button {
+  background: var(--gold);
+  border: none;
+  padding: 14px;
+  width: 100%;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:disabled {
+  background: gray;
+}
+</style>
+</head>
+
+<body>
+
+<header>AURA STORE</header>
+
+<div class="product">
+  <h2>Luxury Aura Accessory</h2>
+
+  <div id="stockText" class="stock"></div>
+
+  <label>Full Name (required)</label>
+  <input id="name" required>
+
+  <label>Required Info</label>
+  <input id="required">
+
+  <label>Extra Notes (optional)</label>
+  <textarea id="optional"></textarea>
+
+  <label>Address (optional)</label>
+  <input id="address">
+
+  <label>Quantity</label>
+  <select id="qty"></select>
+
+  <button id="orderBtn" onclick="order()">Order via WhatsApp</button>
+</div>
+
+<script>
+let stock = 5; // 🔴 ADMIN: change stock number here
+
+const stockText = document.getElementById("stockText");
+const qtySelect = document.getElementById("qty");
+const orderBtn = document.getElementById("orderBtn");
+
+function updateStockUI() {
+  qtySelect.innerHTML = "";
+  if (stock === 0) {
+    stockText.innerHTML = "Out of Stock";
+    stockText.className = "stock out";
+    orderBtn.disabled = true;
+  } else {
+    stockText.innerHTML = stock + " left in stock";
+    stockText.className = "stock";
+    orderBtn.disabled = false;
+    for (let i = 1; i <= stock; i++) {
+      qtySelect.innerHTML += `<option value="${i}">${i}</option>`;
+    }
+  }
+}
+
+updateStockUI();
+
+function order() {
+  const name = document.getElementById("name").value;
+  if (!name) {
+    alert("Full name is required");
+    return;
+  }
+
+  const required = document.getElementById("required").value;
+  const optional = document.getElementById("optional").value;
+  const address = document.getElementById("address").value;
+  const qty = qtySelect.value;
+
+  const msg =
+`NEW ORDER (pending admin approval)
+Name: ${name}
+Required: ${required}
+Optional: ${optional}
+Address: ${address || "Not provided"}
+Quantity: ${qty}`;
+
+  window.open(
+    "https://wa.me/961XXXXXXXX?text=" + encodeURIComponent(msg),
+    "_blank"
+  );
+}
+</script>
+
+</body>
+</html>
